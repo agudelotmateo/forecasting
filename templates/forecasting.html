@@ -1,0 +1,53 @@
+{% extends 'base.html' %}
+
+{% block title %} Pronósticos {% endblock %}
+
+{% block content %}
+<div class="content">
+  <div class="container panel panel-default top-buffer col-xs-12 col-sm-10 col-md-8 col-sm-offset-1 col-md-offset-2 box-shadow--large">
+    <h3 class="panel-heading text-center">Pronósticos</h3>
+    {% if forecast %}
+    <table class="table">
+      <thead>
+        <tr>
+          <th>Método</th>
+	  {% for item_name in items %}
+          <th>{{ item_name }}</th>
+	  {% endfor %}
+        </tr>
+      </thead>
+      <tbody>
+        {% for method_name, results in forecast.items() %}
+        <tr>
+          <th>{{ method_name }}</th>
+	  {% for result in results %}
+          <td>{{ result }}</td>	  
+	  {% endfor %}
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+    {% else %}
+    <div class="panel-body">
+      <form role="form" action="/remove" method="post" enctype="multipart/form-data">
+        <div class="row top-buffer">
+          <div class="form-group col-xs-3 col-xs-offset-3">
+            <label class="btn btn-default btn-block box-shadow--small">
+              <span class="glyphicon glyphicon-file"></span> Buscar CSV<input type="file" name="data_file" hidden>
+            </label>
+          </div>
+          <div class="form-group col-xs-3">
+            <input autocomplete="off" class="form-control box-shadow--small" name="iterations" placeholder="Cantidad de iteraciones" type="text">
+          </div>
+        </div>
+        <div class="form-group top-buffer col-xs-6 col-xs-offset-3">
+          <button type="submit" class="btn btn-info btn-block box-shadow--small">
+            <span class="glyphicon glyphicon-send"></span> Calcular
+          </button>
+        </div>
+      </form>
+    </div>
+    {% endif  %}
+  </div>
+</div>
+{% endblock %}
