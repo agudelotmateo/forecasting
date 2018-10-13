@@ -1,0 +1,48 @@
+/* Required in Bootstrap 3.3 to make the upload file button */
+[hidden] {
+    display: none !important;
+}
+
+/* Small shadow for box elements */
+.box-shadow--small {
+    box-shadow: 0 3px 4px 0 rgba(0, 0, 0, .14), 0 3px 3px -2px rgba(0, 0, 0, .2), 0 1px 8px 0 rgba(0, 0, 0, .12)
+}
+
+/* Large shadow for box elements */
+.box-shadow--large {
+    box-shadow: 0 16px 24px 2px rgba(0, 0, 0, .14), 0 6px 30px 5px rgba(0, 0, 0, .12), 0 8px 10px -5px rgba(0, 0, 0, .2)
+}
+
+/* Blank space on top of this element */
+.top-buffer {
+    margin-top: 20px;
+}
+
+/* Blank space below this element */
+.bottom-buffer {
+    margin-bottom: 20px;
+}
+
+/* The actual content of the page */
+.content {
+    position: fixed;
+    left: 0;
+    right: 0;
+    z-index: 0;
+    margin-left: 20px;
+    margin-right: 20px;
+}
+
+/* Removes the border from the button, making it a nice text link */
+.btn--no-border {
+    background-color: Transparent;
+    background-repeat: no-repeat;
+    border: none;
+    cursor: pointer;
+    overflow: hidden;
+    outline:none;
+}
+
+.center-button {
+    text-align: center;
+}
