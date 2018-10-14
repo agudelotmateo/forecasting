@@ -24,7 +24,7 @@ def forecast(columns):
 
 def format_forecasting_results(column_names, results):
     matrix = []
-    matrix.append([ 'Method' ] + column_names)
+    matrix.append([ 'Método' ] + column_names)
     for method_name, results in results.items():
         row = [ method_name ]
         for result in results:
