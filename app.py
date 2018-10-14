@@ -46,15 +46,23 @@ def render_forecasting_results():
         'forecasting.html', results=session['results'], done=session['iterations'] == 0)
 
 def store_iterations(value, identifier='iterations'):
-    session[identifier] = int(value)
+    session[identifier] = value
 
-def read_iterations(tag_name='iterations'):
-    iterations = request.form.get(tag_name)
-    if not iterations:
-        raise ValueError('No iterations number was provided')
-    if not iterations.isdigit():
-        raise ValueError('The iterations provided is not a valid number')
-    return iterations
+def read_iterations():
+    return read_integer_element('iterations')
+
+def read_new_row():
+    # TODO: correct row
+    return [0] + [ read_integer_element(column_name)
+                   for column_name in session['results'][0][1:] ]
+
+def read_integer_element(tag_name):
+    element = request.form.get(tag_name)
+    if not element:
+        raise ValueError(f'No {tag_name} value provided')
+    if not element.isdigit():
+        raise ValueError(f'The {tag_name} provided is not a valid number')
+    return int(element)
 
 def create_temporary_folder_and_store_path(identifier='folder_path'):
     session[identifier] = util.generate_unused_folder_path()
@@ -76,19 +84,12 @@ def append_row_to_new_csv_and_save(new_row):
     new_csv_path = current_csv_path()
     dataframe.to_csv(new_csv_path, index=False)
 
-def read_new_row():
-    # TODO
-    return [ 105 ] + [ 10000000 for _ in range(12) ]
-
 def current_csv_path():
     return csv_path(session['iterations'])
 
 def csv_path(index, path_identifier='folder_path', prefix='data'):
     return util.join_paths(session[path_identifier], f'{prefix}{index}.csv')
 
+
 if __name__ == '__main__':
-    # TODO
-    # app.run()
-    app.jinja_env.auto_reload = True
-    app.config['TEMPLATES_AUTO_RELOAD'] = True
-    app.run(debug=True, host='0.0.0.0')
+    app.run()
