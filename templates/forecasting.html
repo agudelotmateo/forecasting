@@ -4,7 +4,7 @@
 
 {% block content %}
 <div class="content">
-  <div class="container panel panel-default top-buffer col-xs-12 col-sm-10 col-md-8 col-sm-offset-1 col-md-offset-2 box-shadow--large">
+  <div class="container panel panel-default top-buffer col-xs-12 box-shadow--large">
     <h3 class="panel-heading text-center">Pronósticos</h3>
     {% if results %}
     <table class="table">
@@ -27,13 +27,31 @@
       </tbody>
     </table>
     <form role="form" action="/forecasting" method="post">
+      {% if not done %}
+      <div class="form-group">
+	<table class="table">
+	  <tbody>
+            <tr>
+	      <th>Nuevos Valores</th>
+	      {% for column_name in results[0][1:] %}
+	      <td>
+		<div class="form-group">
+		  <input autocomplete="off" class="form-control box-shadow--small" name="{{ column_name }}" placeholder="{{ column_name }}" type="text">
+		</div>
+	      </td>
+	      {% endfor %}
+            </tr>
+	  </tbody>
+	</table>
+      </div>
+      {% endif %}
       <div class="form-group top-buffer col-xs-6 col-xs-offset-3">
         <button type="submit" class="btn btn-info btn-block box-shadow--small">
           <span class="glyphicon glyphicon-send"></span>
 	  {% if done %}
-	   Terminar
+	  Terminar
 	  {% else %}
-	   Calcular de nuevo
+	  Calcular de nuevo
 	  {% endif %}
         </button>
       </div>
