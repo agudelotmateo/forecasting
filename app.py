@@ -33,17 +33,18 @@ def forecasting_page():
                 append_row_to_new_csv_and_save(read_new_row())
             except ValueError as error:
                 return str(error), 400
-    session['results'] = forecast_from_csv(current_csv_path())
+    print_error = 'results' in session
+    session['results'], error = forecast_from_csv(current_csv_path())
     session['iterations'] -= 1
-    return render_forecasting_results()
+    return render_forecasting_results(error if print_error else None)
 
 def render_initial_forecasting_form():
     session.clear()
     return render_template('forecasting.html')
 
-def render_forecasting_results():
+def render_forecasting_results(error):
     return render_template(
-        'forecasting.html', results=session['results'], done=session['iterations'] == 0)
+        'forecasting.html', results=session['results'], error=error, done=session['iterations'] == 0)
 
 def store_iterations(value, identifier='iterations'):
     session[identifier] = value

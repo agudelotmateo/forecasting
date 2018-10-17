@@ -9,7 +9,9 @@ from pandas import read_csv
 def forecast_from_csv(csv_filename):
     column_names, columns = all_but_first_columns_and_names_from_csv(csv_filename)
     results = forecast(columns)
-    return format_forecasting_results(column_names, results)
+    results_matrix = format_forecasting_results(column_names, results)    
+    real = [ column[len(column) - 1] for column in columns ]
+    return results_matrix, error(real, column_names, results)
 
 def all_but_first_columns_and_names_from_csv(csv_filename):
     dataframe = read_csv(csv_filename)
@@ -19,7 +21,7 @@ def all_but_first_columns_and_names_from_csv(csv_filename):
     return column_names, columns    
 
 def forecast(columns):
-    return { method_name: list(map(max_two_decimals_if_number, map(method, columns)))
+    return { method_name: list(map(method, columns))
                     for method_name, method in forecasting_methods.items() }
 
 def format_forecasting_results(column_names, results):
@@ -28,7 +30,18 @@ def format_forecasting_results(column_names, results):
     for method_name, results in results.items():
         row = [ method_name ]
         for result in results:
-            row.append(result)
+            row.append(max_two_decimals_if_number(result))
+        matrix.append(row)
+    return matrix
+
+def error(real, column_names, results):
+    matrix = []
+    matrix.append([ 'Método' ] + column_names)
+    for method_name, results in results.items():
+        row = [ method_name ]
+        for i in range(len(results)):
+            row.append(max_two_decimals_if_number(
+                real[i] - results[i] if results[i] != '-' else 0))
         matrix.append(row)
     return matrix
 

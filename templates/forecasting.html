@@ -26,6 +26,28 @@
         {% endfor %}
       </tbody>
     </table>
+    {% if error %}
+    <h3 class="panel-heading text-center">Error</h3>
+    <table class="table">
+      <thead>
+        <tr>
+	  {% for item in error[0] %}
+          <th>{{ item }}</th>
+	  {% endfor %}
+        </tr>
+      </thead>
+      <tbody>
+        {% for i in range(1, error|length) %}
+        <tr>
+          <th>{{ error[i][0] }}</th>
+	  {% for j in range(1, error[i]|length) %}
+          <td>{{ error[i][j] }}</td>	  
+	  {% endfor %}
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+    {% endif %}
     <form role="form" action="/forecasting" method="post">
       {% if not done %}
       <div class="form-group">
