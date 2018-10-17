@@ -5,6 +5,15 @@
 {% block content %}
 <div class="content">
   <div class="container panel panel-default top-buffer col-xs-12 box-shadow--large">
+    {% if plots %}
+    <h3 class="panel-heading text-center">Gráficas</h3>
+    {% for path, name in plots %}
+    <div class="col-xs-6 col-xs-padding-3">
+      <h5 class="panel-heading text-center">{{ name }}</h5>
+      <img src="{{ url_for('static', filename=path) }}" alt="{{ name }}">
+    </div>
+    {% endfor %}
+    {% endif %}
     <h3 class="panel-heading text-center">Pronósticos</h3>
     {% if results %}
     <table class="table">

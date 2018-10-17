@@ -5,13 +5,29 @@ from statsmodels.tsa.arima_model import ARIMA
 from statsmodels.tsa.arima_model import ARMA
 from statsmodels.tsa.ar_model import AR
 from pandas import read_csv
+from util import join_paths
 
-def forecast_from_csv(csv_filename):
+import matplotlib
+matplotlib.use('agg')
+import matplotlib.pyplot as plt
+
+def forecast_from_csv(csv_filename, folder_path, prefix='static/'):
     column_names, columns = all_but_first_columns_and_names_from_csv(csv_filename)
     results = forecast(columns)
     results_matrix = format_forecasting_results(column_names, results)    
     real = [ column[len(column) - 1] for column in columns ]
-    return results_matrix, error(real, column_names, results)
+    if folder_path:
+        plots = []
+        for i in range(len(columns)):
+            path = join_paths(
+                folder_path, f'plot-{column_names[i].replace(" ", "")}.png')
+            columns[i].plot().get_figure().savefig(path)
+            relative_path = path[path.find(prefix) + len(prefix):]
+            plots.append((relative_path, column_names[i]))
+            plt.clf()
+    else:
+        plots = None
+    return results_matrix, error(real, column_names, results), plots
 
 def all_but_first_columns_and_names_from_csv(csv_filename):
     dataframe = read_csv(csv_filename)

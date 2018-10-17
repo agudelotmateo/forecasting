@@ -4,7 +4,7 @@ import time
 import os
 
 
-def generate_unused_folder_path(prefix=''):
+def generate_unused_folder_path(prefix='static/'):
     while True:
         unused_folder_name = append_timestamp_and_random_string(prefix)
         if not os.path.isdir(unused_folder_name):

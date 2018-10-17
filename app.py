@@ -34,7 +34,11 @@ def forecasting_page():
             except ValueError as error:
                 return str(error), 400
     print_error = 'results' in session
-    session['results'], error = forecast_from_csv(current_csv_path())
+    save_plots = 'plots' not in session
+    session['results'], error, plots = forecast_from_csv(
+        current_csv_path(), session['folder_path'] if save_plots else None)
+    if save_plots:
+        session['plots'] = plots
     session['iterations'] -= 1
     return render_forecasting_results(error if print_error else None)
 
@@ -44,7 +48,17 @@ def render_initial_forecasting_form():
 
 def render_forecasting_results(error):
     return render_template(
-        'forecasting.html', results=session['results'], error=error, done=session['iterations'] == 0)
+        'forecasting.html', results=session['results'], error=error,
+        done=session['iterations'] == 0, plots=session['plots'])
+
+def save_plots(plots, path_identifier='folder_path', prefix='plot'):
+    folder = session[path_identifier]
+    session['plots'] = []
+    names = session['results'][0][1:]
+    for i in range(len(plots)):
+        path = util.join_paths(folder, f'{prefix}-{names[i]}.png')
+        session['plots'].append(path)
+        plots[i].savefig(path)
 
 def store_iterations(value, identifier='iterations'):
     session[identifier] = value
@@ -89,7 +103,7 @@ def current_csv_path():
     return csv_path(session['iterations'])
 
 def csv_path(index, path_identifier='folder_path', prefix='data'):
-    return util.join_paths(session[path_identifier], f'{prefix}{index}.csv')
+    return util.join_paths(session[path_identifier], f'{prefix}-{index}.csv')
 
 
 if __name__ == '__main__':
